@@ -1,4 +1,6 @@
-package com.issc.dom;
+package com.issc.sendmessage.Utils;
+
+import com.issc.sendmessage.service.SendMail;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +12,7 @@ import java.util.TimerTask;
  * @author yyud
  *
  */
-public class Timing {
+public class TimingUtil {
 
     public static void timer(){
          Calendar calendar = Calendar.getInstance();

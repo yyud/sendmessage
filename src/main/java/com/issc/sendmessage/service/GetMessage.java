@@ -1,6 +1,8 @@
-package com.issc.dom;
+package com.issc.sendmessage.service;
 
+import com.issc.sendmessage.Utils.PropertiesReaderUtil;
 import com.alibaba.fastjson.JSON;
+import com.issc.sendmessage.bean.DataObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -21,7 +23,8 @@ public class GetMessage {
         // 设置
         int x = (int)(Math.random()*20000+1);
         //设置api接口
-        String url = "http://api.avatardata.cn/Joke/QueryJokeByTime?key=616ccbb7801c49f1a806e6d9a7056b5c&page="+x+"&rows=1&sort=desc&time=1518745237";
+        //String url = "http://api.avatardata.cn/Joke/QueryJokeByTime?key=616ccbb7801c49f1a806e6d9a7056b5c&page="+x+"&rows=1&sort=desc&time=1518745237";
+        String url = PropertiesReaderUtil.loadProperties("url")+x+PropertiesReaderUtil.loadProperties("url2")+PropertiesReaderUtil.loadProperties("key");
         String str = GetMessage.run(url); //获取数据Json对象
         DataObject dataObject = GetMessage.parsingData(str); //解析Json对象
         // System.out.println(str);

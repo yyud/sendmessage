@@ -1,7 +1,12 @@
-package com.issc.dom;
+package com.issc.sendmessage.service;
+
+import com.issc.sendmessage.Utils.PropertiesReaderUtil;
+import com.issc.sendmessage.Utils.TimingUtil;
+import com.issc.sendmessage.bean.DataObject;
+import com.issc.sendmessage.bean.Results;
+
 
 import javax.mail.Message;
-
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -18,7 +23,7 @@ public class SendMail {
     public static void main(String[] args) throws Exception {
 
        // SendMail.creakMail();
-        Timing.timer();
+        TimingUtil.timer();
     }
 
     /**
@@ -30,13 +35,16 @@ public class SendMail {
         //注：建议使用主流邮箱，我曾遇到用sohu发出邮件丢失的情况，
         //不仅仅是在程序这里，包括在sohu邮箱客户端测试也发生了邮件丢失
         Properties prop = new Properties();
-        prop.setProperty("mail.host", "smtp.qq.com");
-        prop.setProperty("mail.transport.protocol", "smtp");
-        prop.setProperty("mail.smtp.auth", "true");
+//        prop.setProperty("mail.host", "smtp.qq.com");
+//        prop.setProperty("mail.transport.protocol", "smtp");
+//        prop.setProperty("mail.smtp.auth", "true");
+        prop.setProperty(PropertiesReaderUtil.loadProperties("SetProperty1"), PropertiesReaderUtil.loadProperties("SetProperty2"));
+        prop.setProperty(PropertiesReaderUtil.loadProperties("SetProperty3"), PropertiesReaderUtil.loadProperties("SetProperty4"));
+        prop.setProperty(PropertiesReaderUtil.loadProperties("SetProperty5"), PropertiesReaderUtil.loadProperties("SetProperty6"));
 
         //使用STARTTLS,对于其它协议（如pop3，imap），只需要将smtp改为相应协议即可（pop3要改为pop）
         // 若要使用SSL，只需要设置mail.smtp.ssl.enable为true
-        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put(PropertiesReaderUtil.loadProperties("SetProperty7"), PropertiesReaderUtil.loadProperties("SetProperty6"));
 
         //使用JavaMail发送邮件的5个步骤
         //1、创建session
@@ -46,7 +54,8 @@ public class SendMail {
         //2、通过session得到transport对象
         Transport ts = session.getTransport();
         //3、发件邮箱的帐号和密码。
-        ts.connect("990715561@qq.com", "lyqwleprxyembdjj");
+      //  ts.connect("990715561@qq.com", "lyqwleprxyembdjj");
+        ts.connect(PropertiesReaderUtil.loadProperties("UserName"), PropertiesReaderUtil.loadProperties("PassWord"));
         //4、创建邮件（Java用Message对象封装（代表）邮件），其中，最后一个参数含义：
         //（收件人<-->RecipientType.TO，抄送<-->RecipientType.CC，密送<-->RecipientType.BBC）
         Message message = createSimpleMail(session, "nice dream", dataObject.getResult().get(0).getContent(), Message.RecipientType.TO);
@@ -71,15 +80,14 @@ public class SendMail {
         MimeMessage message = new MimeMessage(session);
 
         //指定发件人昵称
-        String nick = MimeUtility.encodeText("你！嘛麦 皮", "utf-8", "B");//避免乱码
+        String nick = MimeUtility.encodeText("晚安好梦！", "utf-8", "B");//避免乱码
 
         //指明邮件的发件人
-        message.setFrom(new InternetAddress(nick + "<990715561@qq.com>"));
+        message.setFrom(new InternetAddress(nick + "<"+PropertiesReaderUtil.loadProperties("UserName")+">"));
 
         //指明邮件的收件人
-       // message.addRecipient(type, new InternetAddress("flower.monk@foxmail.com"));
-        message.addRecipient(type, new InternetAddress("15213590456@139.com"));
-        message.addRecipient(type, new InternetAddress("15825923591@139.com"));
+        message.addRecipient(type, new InternetAddress(PropertiesReaderUtil.loadProperties("SendTo")));
+       // message.addRecipient(type, new InternetAddress(PropertiesReaderUtil.loadProperties("SendTo2")));
 
         //邮件主题
         message.setSubject(title);
